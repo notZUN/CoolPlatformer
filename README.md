@@ -7,6 +7,7 @@ game progress:
 	Days 1-2: I created window and colored it different colors
 	Days 3-4: I added square which can move(but buggy) and add animations, sprite and physics 
 	Days 4-5: I prepared this project for github and fixed last bugs
+	Days 6-7: rewrote code. he became cleaner
 
 g++ basic.cpp sprites.cpp -o CoolPlatformer -lSDL2
 
