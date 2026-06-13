@@ -3,6 +3,7 @@
 #include <SDL2/SDL.h>
 #include <ctime>
 #include "assets.h"
+#include <iostream>
 
 //create base variables for window width and hight, arrays for my "painting"(I don't know how call it), etc.
 float delta = 0.016f;
@@ -10,16 +11,17 @@ const uint8_t fg = 100; //gravity
 const uint8_t window_width = 128, window_height = 96;
 uint8_t camera[window_width * window_height];
 uint16_t final_screen[window_width * window_height];
-uint16_t cam_x = 0, cam_y = 0;
+float cam_x = 0, cam_y = 0;
+unsigned int generation_x = 0;
 
 
 
 int main(){
-    srand(time(0));
+    srand(time(NULL));
     const uint8_t* keystate = SDL_GetKeyboardState(NULL);
 
     SDL_Init(SDL_INIT_VIDEO);
-
+    
     SDL_Renderer* render = nullptr;
 
     //create window
@@ -62,6 +64,17 @@ int main(){
         tick_start = SDL_GetTicks();
         SDL_RenderClear(render);
 
+        //generation
+        if(cam_x > generation_x - 80){
+          while(cam_x > generation_x - 80){
+            create_block(generation_x, 5);
+            if(generation_x & 15 == 0) create_block(generation_x, random() % 32);
+
+            generation_x++;
+          }
+        }
+
+
         //input from keyboard
         while(SDL_PollEvent(&event)){
                 if(event.type == SDL_QUIT) running = false;
@@ -79,25 +92,33 @@ int main(){
             else if(keystate[SDL_SCANCODE_LEFT] && player.x > 3) player.left(delta);
             else player.stop(delta);
         }
+         
 
         player.update(delta);
 
+      
+        if(player.x - cam_x > 15){
+          cam_x += 10 * delta;
+        }
+        if(player.x - cam_x >= 50){
+          cam_x = player.x - 50;
+        }
 
         //painting
         //cleaning array of camera
         for(uint16_t i = 0; i < window_height; i++){
             for(uint16_t j = 0; j < window_width; j++){
-                camera[i*window_width+j] = 0;
+                camera[i*window_width+j] = 2;
             }
         }
 
         if(player.direction)for(uint8_t i = 0; i < 6; i++){
             for(uint8_t j = 0; j < 6; j++)
-            if(sprite_player[sprite_player_info[player.frame.first][0] + player.frame.second][i*6+j] != 255)camera[(int(player.y) - cam_y + i)*window_width + (int(player.x) - cam_x + j)] = sprite_player[sprite_player_info[player.frame.first][0] + player.frame.second][i*6+j];
+            if(sprite_player[sprite_player_info[player.frame.first][0] + player.frame.second][i*6+j] != 255)camera[(int(player.y) - int(cam_y) + i)*window_width + (int(player.x) - int(cam_x) + j)] = sprite_player[sprite_player_info[player.frame.first][0] + player.frame.second][i*6+j];
         }
         else for(uint8_t i = 0; i < 6; i++){
             for(uint8_t j = 0; j < 6; j++)
-            if(sprite_player[sprite_player_info[player.frame.first][0] + player.frame.second][i*6+5-j] != 255)camera[(int(player.y) - cam_y + i)*window_width + (int(player.x) - cam_x + j)] = sprite_player[sprite_player_info[player.frame.first][0] + player.frame.second][i*6+5-j];
+            if(sprite_player[sprite_player_info[player.frame.first][0] + player.frame.second][i*6+5-j] != 255)camera[(int(player.y) - int(cam_y) + i)*window_width + (int(player.x) - int(cam_x) + j)] = sprite_player[sprite_player_info[player.frame.first][0] + player.frame.second][i*6+5-j];
         }
         
         
@@ -115,6 +136,8 @@ int main(){
         if(delta < 1.0f / 60.0f)SDL_Delay((1.0f / 60.0f - delta)*1000);
         delta = float(SDL_GetTicks() - tick_start) / 1000.0f;
         player.frame_time += delta;
+
+        std::cout << 1 / delta << "fps \n";
     }
 
 

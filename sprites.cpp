@@ -10,6 +10,7 @@ const uint8_t sprite_player_info[2][2] = {
 const uint16_t pallete[256] = {
     0, //black
     65471, //white
+    63       //blue
 };
 
 const uint8_t sprite_player[4][36] = {
@@ -48,4 +49,25 @@ const uint8_t sprite_player[4][36] = {
         1, 1, 255, 255, 1, 1,
         255, 255, 255, 255, 255, 255
     }
+};
+
+
+const uint8_t sprite_setting_cloud[2][15] = {
+    {
+      63, 63, 1, 1, 63,
+      63, 1, 1, 1, 1,
+      63, 63, 63, 63, 63
+    },
+    {
+      63, 1, 1, 63, 63,
+      1, 1, 1, 1, 1,
+      63, 1, 1, 1, 63
+    }
+};
+
+const uint8_t sprite_blocks[1][4]{
+  {
+    1, 1,
+    1, 1
+  }
 };

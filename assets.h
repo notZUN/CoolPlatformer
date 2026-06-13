@@ -4,12 +4,14 @@
 #include <utility>
 
 extern const uint8_t fg;
+extern int unsigned generation_x;
 
 //sprites
 extern const uint8_t sprite_player[4][36];
+extern const uint8_t sprite_cloud[2][15];
 extern const uint8_t sprite_player_info[2][2];
 extern const uint16_t pallete[256];
-
+//extern std::vector<Object> objects;
 
 //functions and variables
 class Player{
@@ -24,6 +26,16 @@ public:
     void left(float delta_time);
     void update(float delta_time);
     void stop(float delta_time);
-
 };
+class Object{
+public:
+    float x, y, xs, ys;
+    uint8_t type;
+
+    Object(uint8_t typ, float start_x, float start_y, float start_xs, float start_ys);
+};
+
+
+    void create_block(int x, int y);
+
 #endif

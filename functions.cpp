@@ -9,7 +9,14 @@ Player::Player(int16_t start_x, int16_t start_y){
     frame_time = 0;
 }
 
+Object::Object(uint8_t typ, float start_x, float start_y, float start_xs, float start_ys){
+  x = start_x;
+  y = start_y;
+  xs = start_xs;
+  ys = start_ys;
+  type = typ;
 
+}
 
 void Player::update(float delta_time){
     x += xs * delta_time;
@@ -62,4 +69,8 @@ void Player::stop(float delta_time){
     if(xs > 0.4)xs -= delta_time * 80;
     else if(xs < -0.4) xs += delta_time * 80;
     else xs = 0;
-}
+} 
+
+void create_block(int x, int y){
+  Object(0, x, y, 0, 0);
+} 
