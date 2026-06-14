@@ -36,6 +36,9 @@ public:
 };
 
 
-    void create_block(int x, int y);
+void create_block(uint8_t typ, int x, int y);
+    
+extern Object* blocks[1000];
+unsigned short free_blocks();
 
 #endif

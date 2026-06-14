@@ -1,5 +1,5 @@
 #include "assets.h"
-
+#include<iostream>
 Player::Player(int16_t start_x, int16_t start_y){
     x = start_x;
     y = start_y;
@@ -71,6 +71,20 @@ void Player::stop(float delta_time){
     else xs = 0;
 } 
 
-void create_block(int x, int y){
-  Object(0, x, y, 0, 0);
-} 
+void create_block(uint8_t typ, int x, int y){
+  unsigned int free = free_blocks();
+  blocks[free]->type = typ;
+  blocks[free]->x = x;
+  blocks[free]->y = y;
+  blocks[free]->xs = 0;
+  blocks[free]->ys = 0;
+
+  std::cout << "create block id: " << free << " type: " << typ << '\n';
+}
+
+unsigned short free_blocks(){
+  for(unsigned short i = 0; i < 1000; i++){
+    if(blocks[i] -> type == 0) return i;
+  }
+  return 1000;
+}

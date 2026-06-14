@@ -65,9 +65,3 @@ const uint8_t sprite_setting_cloud[2][15] = {
     }
 };
 
-const uint8_t sprite_blocks[1][4]{
-  {
-    1, 1,
-    1, 1
-  }
-};

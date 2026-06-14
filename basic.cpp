@@ -13,6 +13,7 @@ uint8_t camera[window_width * window_height];
 uint16_t final_screen[window_width * window_height];
 float cam_x = 0, cam_y = 0;
 unsigned int generation_x = 0;
+Object* blocks[1000];
 
 
 
@@ -58,6 +59,9 @@ int main(){
 
     Player player(20, 90);
 
+for(int i = 0; i < 1000; i++){
+  blocks[i] = new Object(0, 0, 0, 0, 0);
+}
     
 //game
     while(running){
@@ -65,15 +69,22 @@ int main(){
         SDL_RenderClear(render);
 
         //generation
-        if(cam_x > generation_x - 80){
-          while(cam_x > generation_x - 80){
-            create_block(generation_x, 5);
-            if(generation_x & 15 == 0) create_block(generation_x, random() % 32);
+        if(cam_x + 80 > generation_x){
+          while(cam_x + 80 > generation_x){
+            if((generation_x % 2) == 0) create_block(1 ,generation_x, 5);
+            if((generation_x % 16) == 0) create_block((rand() % 4) + 1,generation_x, (rand() % 8) * 4 + 4);
 
             generation_x++;
           }
         }
 
+        //test 
+        int test = 0;
+        for(int i = 0; i < 1000; i++){
+          if(blocks[i] -> type != 0) test++;
+        }
+        
+        std::cout << test << '\n';
 
         //input from keyboard
         while(SDL_PollEvent(&event)){
@@ -111,7 +122,7 @@ int main(){
                 camera[i*window_width+j] = 2;
             }
         }
-
+        //player 
         if(player.direction)for(uint8_t i = 0; i < 6; i++){
             for(uint8_t j = 0; j < 6; j++)
             if(sprite_player[sprite_player_info[player.frame.first][0] + player.frame.second][i*6+j] != 255)camera[(int(player.y) - int(cam_y) + i)*window_width + (int(player.x) - int(cam_x) + j)] = sprite_player[sprite_player_info[player.frame.first][0] + player.frame.second][i*6+j];
@@ -120,7 +131,17 @@ int main(){
             for(uint8_t j = 0; j < 6; j++)
             if(sprite_player[sprite_player_info[player.frame.first][0] + player.frame.second][i*6+5-j] != 255)camera[(int(player.y) - int(cam_y) + i)*window_width + (int(player.x) - int(cam_x) + j)] = sprite_player[sprite_player_info[player.frame.first][0] + player.frame.second][i*6+5-j];
         }
-        
+        //blocks
+        for(int l = 0; l < 1000; l++){
+          switch(blocks[l]->type){
+            case 1:
+              for(int i = 0; i < 3; i++){
+                for(int j = 0; j < 3; j++){
+                  camera[(window_height - int(blocks[l]->y - int(cam_y) + j)) * window_width + int(blocks[l]->x - cam_x + i)] = 1;
+                }
+              }
+          }
+        }
         
 
         //convertion
