@@ -21,8 +21,8 @@ Object::Object(uint8_t typ, float start_x, float start_y, float start_xs, float 
 void Player::update(float delta_time){
     x += xs * delta_time;
     y += ys * delta_time;
-    if(y >= 90){
-        y = 90;
+    if(y >= window_height - 12){
+        y = window_height - 12;
         ys = 0;
         on_floor = 1;
     }

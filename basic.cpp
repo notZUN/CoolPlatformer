@@ -67,15 +67,21 @@ for(int i = 0; i < 1000; i++){
     while(running){
         tick_start = SDL_GetTicks();
         SDL_RenderClear(render);
-
+        
+        //delete behind window
+        for(auto &p: blocks){
+          if(p->x < cam_x)p->type = 0;
+        }
         //generation
-        if(cam_x + 80 > generation_x){
-          while(cam_x + 80 > generation_x){
-            if((generation_x % 2) == 0) create_block(1 ,generation_x, 5);
-            if((generation_x % 16) == 0) create_block((rand() % 4) + 1,generation_x, (rand() % 8) * 4 + 4);
-
-            generation_x++;
+        if(cam_x + 200 > generation_x){
+          while(cam_x + 200 > generation_x){
+            //if((generation_x & 31) == 0){
+              uint8_t rand_num = rand() & 3, rand_y = (rand() % 8) * 8 + 12;
+              for(int i = 0; i < rand_num; i++)create_block(1,generation_x + (i * 8), rand_y);
+            //}
+            generation_x += rand_num * 8 + rand() & 15 + 8;
           }
+          //generation_x = cam_x + 200;
         }
 
         //test 
@@ -117,9 +123,14 @@ for(int i = 0; i < 1000; i++){
 
         //painting
         //cleaning array of camera
-        for(uint16_t i = 0; i < window_height; i++){
+        for(uint16_t i = 0; i + 6 < window_height; i++){
             for(uint16_t j = 0; j < window_width; j++){
                 camera[i*window_width+j] = 2;
+            }
+        }
+        for(uint16_t i = window_height - 6; i < window_height; i++){
+            for(uint16_t j = 0; j < window_width; j++){
+                camera[i*window_width+j] = 1;
             }
         }
         //player 
@@ -133,14 +144,14 @@ for(int i = 0; i < 1000; i++){
         }
         //blocks
         for(int l = 0; l < 1000; l++){
-          switch(blocks[l]->type){
-            case 1:
-              for(int i = 0; i < 3; i++){
+          //switch(blocks[l]->type){
+            //case 1:
+              if(blocks[l]->x + 4< window_width + cam_x && blocks[l]->type != 0)for(int i = 0; i < 8; i++){
                 for(int j = 0; j < 3; j++){
                   camera[(window_height - int(blocks[l]->y - int(cam_y) + j)) * window_width + int(blocks[l]->x - cam_x + i)] = 1;
                 }
               }
-          }
+          //}
         }
         
 

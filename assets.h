@@ -3,6 +3,7 @@
 #include <cstdint>
 #include <utility>
 
+extern const uint8_t window_height, window_width;
 extern const uint8_t fg;
 extern int unsigned generation_x;
 
