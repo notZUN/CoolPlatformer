@@ -19,14 +19,37 @@ Object::Object(uint8_t typ, float start_x, float start_y, float start_xs, float 
 }
 
 void Player::update(float delta_time){
-    x += xs * delta_time;
+    //physic
+    float dist_x = 99999999.0f;
+    float dist_y = 99999999.0f;
+    if(!on_floor) ys += fg * delta_time;
+    for(auto &p: blocks){
+      if(p->type != 0){
+        if(p->x < x + 7 + xs * delta_time && x < p->x + 8 + xs * delta_time){
+          if(abs(int(p->y - y)) < dist_y){
+            dist_y = abs(int(p->y - y));
+            near_block_y = p;
+          }
+        }
+        //if(p->y < y + 9 + ys && y < p->y + ys){
+          //if(abs(p->x - x) < dist_x){
+            //dist_x = abs(p->x - x);
+            //near_block_x = p;
+          //}
+        //}
+
+      }
+    }
+    if(dist_y > 100000) near_block_y = nullptr;
+
+
     y += ys * delta_time;
+    x += xs * delta_time;
     if(y >= window_height - 12){
         y = window_height - 12;
         ys = 0;
         on_floor = 1;
     }
-    if(!on_floor) ys += fg * delta_time;
     
     //animation
     if(frame_time >= 0.1f){
@@ -79,7 +102,6 @@ void create_block(uint8_t typ, int x, int y){
   blocks[free]->xs = 0;
   blocks[free]->ys = 0;
 
-  std::cout << "create block id: " << free << " type: " << typ << '\n';
 }
 
 unsigned short free_blocks(){
@@ -88,3 +110,20 @@ unsigned short free_blocks(){
   }
   return 1000;
 }
+
+uint16_t abs(short num){
+  if(num < 0) return num * -1;
+  else return num;
+}
+
+
+/*Object* Player::near_block(bool direc){
+  Object* near = blocks[0];
+  float dist = 9999999999.0f;
+  switch (direc){
+    case true:
+      
+  }
+    
+  return near;
+};*/ 

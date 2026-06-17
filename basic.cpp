@@ -15,6 +15,8 @@ float cam_x = 0, cam_y = 0;
 unsigned int generation_x = 0;
 Object* blocks[1000];
 
+Object* near_block_x;
+Object* near_block_y;
 
 
 int main(){
@@ -73,16 +75,16 @@ for(int i = 0; i < 1000; i++){
           if(p->x < cam_x)p->type = 0;
         }
         //generation
-        if(cam_x + 200 > generation_x){
+        //if(cam_x + 200 > generation_x){
           while(cam_x + 200 > generation_x){
             //if((generation_x & 31) == 0){
-              uint8_t rand_num = rand() & 3, rand_y = (rand() % 8) * 8 + 12;
+              uint8_t rand_num = (rand() & 7), rand_y = (abs(rand()) & 7) * 4 + 12;
               for(int i = 0; i < rand_num; i++)create_block(1,generation_x + (i * 8), rand_y);
             //}
-            generation_x += rand_num * 8 + rand() & 15 + 8;
+            generation_x += rand_num * 8 + (abs(rand()) & 15) + 8;
           }
           //generation_x = cam_x + 200;
-        }
+        //}
 
         //test 
         int test = 0;
@@ -146,12 +148,24 @@ for(int i = 0; i < 1000; i++){
         for(int l = 0; l < 1000; l++){
           //switch(blocks[l]->type){
             //case 1:
-              if(blocks[l]->x + 4< window_width + cam_x && blocks[l]->type != 0)for(int i = 0; i < 8; i++){
+              if(blocks[l]->x + 8< window_width + cam_x && blocks[l]->type != 0)for(int i = 0; i < 8; i++){
                 for(int j = 0; j < 3; j++){
                   camera[(window_height - int(blocks[l]->y - int(cam_y) + j)) * window_width + int(blocks[l]->x - cam_x + i)] = 1;
                 }
               }
           //}
+        }
+
+
+        //for(int i = 0; i < 8; i++){
+          //for(int j = 0; j < 3; j++){
+            //  camera[(window_height - int(near_block_x->y - int(cam_y) + j)) * window_width + int(near_block_x->x - cam_x + i)] = 0;
+        //  }
+        //}
+        for(int i = 0; i < 8; i++){
+          for(int j = 0; j < 3; j++){
+              if(near_block_y != nullptr)camera[(window_height - int(near_block_y->y - int(cam_y) + j)) * window_width + int(near_block_y->x - cam_x + i)] = 0;
+          }
         }
         
 
