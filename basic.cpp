@@ -12,7 +12,7 @@ const uint8_t window_width = 128, window_height = 96;
 uint8_t camera[window_width * window_height];
 uint16_t final_screen[window_width * window_height];
 float cam_x = 0, cam_y = 0;
-unsigned int generation_x = 0;
+unsigned int generation_x = 20;
 Object* blocks[1000];
 
 Object* near_block_x;
@@ -75,24 +75,19 @@ for(int i = 0; i < 1000; i++){
           if(p->x < cam_x)p->type = 0;
         }
         //generation
-        //if(cam_x + 200 > generation_x){
-          while(cam_x + 200 > generation_x){
-            //if((generation_x & 31) == 0){
-              uint8_t rand_num = (rand() & 7), rand_y = (abs(rand()) & 7) * 4 + 12;
-              for(int i = 0; i < rand_num; i++)create_block(1,generation_x + (i * 8), rand_y);
-            //}
-            generation_x += rand_num * 8 + (abs(rand()) & 15) + 8;
-          }
-          //generation_x = cam_x + 200;
-        //}
+        while(cam_x + 200 > generation_x){
+            uint8_t rand_num = (rand() & 7), rand_y = (abs(rand()) & 7) * 4 + 16;
+            for(int i = 0; i < rand_num; i++)create_block(1,generation_x + (i * 8), rand_y);
+          generation_x += rand_num * 8 + (abs(rand()) & 31) + 8;
+        }
 
-        //test 
-        int test = 0;
+        //block count test 
+        /*int test = 0;
         for(int i = 0; i < 1000; i++){
           if(blocks[i] -> type != 0) test++;
         }
         
-        std::cout << test << '\n';
+        std::cout << test << '\n';*/
 
         //input from keyboard
         while(SDL_PollEvent(&event)){
@@ -156,17 +151,17 @@ for(int i = 0; i < 1000; i++){
           //}
         }
 
-
-        //for(int i = 0; i < 8; i++){
-          //for(int j = 0; j < 3; j++){
-            //  camera[(window_height - int(near_block_x->y - int(cam_y) + j)) * window_width + int(near_block_x->x - cam_x + i)] = 0;
-        //  }
-        //}
+        //paint x&y_near_block
+        /*0for(int i = 0; i < 8; i++){
+          for(int j = 0; j < 3; j++){
+            if(near_block_x != nullptr)camera[(window_height - int(near_block_x->y - int(cam_y) + j)) * window_width + int(near_block_x->x - cam_x + i)] = 0;
+          }
+        }
         for(int i = 0; i < 8; i++){
           for(int j = 0; j < 3; j++){
               if(near_block_y != nullptr)camera[(window_height - int(near_block_y->y - int(cam_y) + j)) * window_width + int(near_block_y->x - cam_x + i)] = 0;
           }
-        }
+        }*/ 
         
 
         //convertion
@@ -182,8 +177,9 @@ for(int i = 0; i < 1000; i++){
         if(delta < 1.0f / 60.0f)SDL_Delay((1.0f / 60.0f - delta)*1000);
         delta = float(SDL_GetTicks() - tick_start) / 1000.0f;
         player.frame_time += delta;
-
-        std::cout << 1 / delta << "fps \n";
+        
+        //fps test
+        //std::cout << 1 / delta << "fps \n";
     }
 
 

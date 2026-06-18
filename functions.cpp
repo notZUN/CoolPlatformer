@@ -19,30 +19,50 @@ Object::Object(uint8_t typ, float start_x, float start_y, float start_xs, float 
 }
 
 void Player::update(float delta_time){
-    //physic
+      //physic
+    //collisions
+      //search nearest block
     float dist_x = 99999999.0f;
     float dist_y = 99999999.0f;
     if(!on_floor) ys += fg * delta_time;
     for(auto &p: blocks){
       if(p->type != 0){
+        //along y-axis 
         if(p->x < x + 7 + xs * delta_time && x < p->x + 8 + xs * delta_time){
-          if(abs(int(p->y - y)) < dist_y){
-            dist_y = abs(int(p->y - y));
+          if(abs(int((window_height - p->y) - y)) < dist_y){
+            dist_y = abs(int((window_height - p->y) - y));
             near_block_y = p;
           }
         }
-        //if(p->y < y + 9 + ys && y < p->y + ys){
-          //if(abs(p->x - x) < dist_x){
-            //dist_x = abs(p->x - x);
-            //near_block_x = p;
-          //}
-        //}
-
+        //along x-axis 
+        if(window_height - p->y < y + ys * delta_time + 5 && y + ys * delta_time + 1< window_height - p->y && p->x < window_width + x){
+          if(abs(int(p->x - x)) < dist_x){
+            dist_x = abs(int(p->x - x));
+            near_block_x = p;
+          }
+        }
       }
     }
-    if(dist_y > 100000) near_block_y = nullptr;
+    //will player collide?
+      //along y-axis
+    if(dist_y > 1024){
+      near_block_y = nullptr;
+      on_floor = false;
+    }
+    else if(y > window_height - near_block_y->y && y + ys * delta_time < window_height - near_block_y->y + 1){
+      ys *= -0.4;
+    }
+    else if(y + 7 < window_height - near_block_y->y && y + 7 + ys * delta_time > window_height - near_block_y->y){
+      ys = 0;
+      on_floor = true;
+    }
+      //along x-axis 
+      if(dist_x > 1024) near_block_x = nullptr;
+      else if(near_block_x->x < x + 7 + xs * delta_time && x < near_block_x->x + 9 + xs * delta_time){
+        xs = 0;
+      }
 
-
+    //change in position
     y += ys * delta_time;
     x += xs * delta_time;
     if(y >= window_height - 12){
@@ -115,15 +135,3 @@ uint16_t abs(short num){
   if(num < 0) return num * -1;
   else return num;
 }
-
-
-/*Object* Player::near_block(bool direc){
-  Object* near = blocks[0];
-  float dist = 9999999999.0f;
-  switch (direc){
-    case true:
-      
-  }
-    
-  return near;
-};*/ 
