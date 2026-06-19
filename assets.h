@@ -3,15 +3,16 @@
 #include <cstdint>
 #include <utility>
 
+extern float cam_x;
 extern const uint8_t window_height, window_width;
 extern const uint8_t fg;
 extern int unsigned generation_x;
 //sprites
 extern const uint8_t sprite_player[4][36];
-extern const uint8_t sprite_cloud[2][15];
 extern const uint8_t sprite_player_info[2][2];
 extern const uint16_t pallete[256];
-//extern std::vector<Object> objects;
+extern const uint8_t money[25];
+
 
 //functions and variables
 class Object{

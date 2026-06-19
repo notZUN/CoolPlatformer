@@ -26,7 +26,7 @@ void Player::update(float delta_time){
     float dist_y = 99999999.0f;
     if(!on_floor) ys += fg * delta_time;
     for(auto &p: blocks){
-      if(p->type != 0){
+      if(p->type == 1){
         //along y-axis 
         if(p->x < x + 7 + xs * delta_time && x < p->x + 8 + xs * delta_time){
           if(abs(int((window_height - p->y) - y)) < dist_y){
@@ -65,6 +65,10 @@ void Player::update(float delta_time){
     //change in position
     y += ys * delta_time;
     x += xs * delta_time;
+    if((x + xs * delta_time) - cam_x < 5){
+      xs *= -1.2;
+    }
+    std::cout << x << '\n';
     if(y >= window_height - 12){
         y = window_height - 12;
         ys = 0;

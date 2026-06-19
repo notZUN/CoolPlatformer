@@ -8,11 +8,12 @@
 //create base variables for window width and hight, arrays for my "painting"(I don't know how call it), etc.
 float delta = 0.016f;
 const uint8_t fg = 100; //gravity
-const uint8_t window_width = 128, window_height = 96;
+const uint8_t window_width = 170, window_height = 96;
 uint8_t camera[window_width * window_height];
 uint16_t final_screen[window_width * window_height];
 float cam_x = 0, cam_y = 0;
 unsigned int generation_x = 20;
+uint8_t chance_money = 0;
 Object* blocks[1000];
 
 Object* near_block_x;
@@ -32,8 +33,8 @@ int main(){
         "Project_01",
         100, 
         100, 
-        window_width * 10, 
-        window_height * 10,
+        window_width * 5, 
+        window_height * 5,
         SDL_WINDOW_SHOWN
     );
 
@@ -76,18 +77,22 @@ for(int i = 0; i < 1000; i++){
         }
         //generation
         while(cam_x + 200 > generation_x){
-            uint8_t rand_num = (rand() & 7), rand_y = (abs(rand()) & 7) * 4 + 16;
+            uint8_t rand_num = (rand() & 7) + 1, rand_y = (abs(rand()) & 7) * 4 + 16;
             for(int i = 0; i < rand_num; i++)create_block(1,generation_x + (i * 8), rand_y);
+            //money 
+            if((rand() & 31) + 1 > chance_money){
+              create_block(2, generation_x + 1 + (rand() % rand_num) * 8, (window_height - rand_y) - 8);
+            }
           generation_x += rand_num * 8 + (abs(rand()) & 31) + 8;
         }
 
         //block count test 
-        /*int test = 0;
+        int test = 0;
         for(int i = 0; i < 1000; i++){
           if(blocks[i] -> type != 0) test++;
         }
         
-        std::cout << test << '\n';*/
+        std::cout << test << '\n';
 
         //input from keyboard
         while(SDL_PollEvent(&event)){
@@ -141,14 +146,26 @@ for(int i = 0; i < 1000; i++){
         }
         //blocks
         for(int l = 0; l < 1000; l++){
-          //switch(blocks[l]->type){
-            //case 1:
-              if(blocks[l]->x + 8< window_width + cam_x && blocks[l]->type != 0)for(int i = 0; i < 8; i++){
+          switch(blocks[l]->type){
+            //blocks 
+            case 1:
+              if(blocks[l]->x + 8< window_width + cam_x)
+              for(int i = 0; i < 8; i++){
                 for(int j = 0; j < 3; j++){
                   camera[(window_height - int(blocks[l]->y - int(cam_y) + j)) * window_width + int(blocks[l]->x - cam_x + i)] = 1;
                 }
               }
-          //}
+              break;
+            //money 
+            case 2:
+              if(blocks[l]->x + 5< window_width + cam_x)
+              for(int i = 0; i < 5; i++){
+                for(int j = 0; j < 5; j++){
+                  if(money[i*5+j] != 255)camera[(int(blocks[l]->y - int(cam_y) + j)) * window_width + int(blocks[l]->x - cam_x + i)] = money[i*5+j];
+                }
+              }
+              break;
+          }
         }
 
         //paint x&y_near_block
