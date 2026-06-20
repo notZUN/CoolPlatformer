@@ -14,6 +14,8 @@ uint16_t final_screen[window_width * window_height];
 float cam_x = 0, cam_y = 0;
 unsigned int generation_x = 20;
 uint8_t chance_money = 0;
+float anim_money_y = 0;
+bool anim_money_direction = 0;
 Object* blocks[1000];
 
 Object* near_block_x;
@@ -144,7 +146,17 @@ for(int i = 0; i < 1000; i++){
             for(uint8_t j = 0; j < 6; j++)
             if(sprite_player[sprite_player_info[player.frame.first][0] + player.frame.second][i*6+5-j] != 255)camera[(int(player.y) - int(cam_y) + i)*window_width + (int(player.x) - int(cam_x) + j)] = sprite_player[sprite_player_info[player.frame.first][0] + player.frame.second][i*6+5-j];
         }
-        //blocks
+        
+          //money "animation"
+          if(anim_money_y - 4 * delta > 0){
+            anim_money_direction = 0;
+          }
+          if(anim_money_y - 4 * delta < -3){
+            anim_money_direction = 1;
+          }
+          anim_money_y += (int(anim_money_direction) * 2 - 1) * 4 * delta;
+          std::cout << anim_money_y << ' ' << anim_money_direction << '\n';
+        //blocks 
         for(int l = 0; l < 1000; l++){
           switch(blocks[l]->type){
             //blocks 
@@ -161,7 +173,7 @@ for(int i = 0; i < 1000; i++){
               if(blocks[l]->x + 5< window_width + cam_x)
               for(int i = 0; i < 5; i++){
                 for(int j = 0; j < 5; j++){
-                  if(money[i*5+j] != 255)camera[(int(blocks[l]->y - int(cam_y) + j)) * window_width + int(blocks[l]->x - cam_x + i)] = money[i*5+j];
+                  if(money[i*5+j] != 255)camera[(int(blocks[l]->y - int(cam_y) + j + anim_money_y)) * window_width + int(blocks[l]->x - cam_x + i)] = money[i*5+j];
                 }
               }
               break;
