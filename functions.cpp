@@ -26,7 +26,8 @@ void Player::update(float delta_time){
     float dist_y = 99999999.0f;
     if(!on_floor) ys += fg * delta_time;
     for(auto &p: blocks){
-      if(p->type == 1){
+      switch(p->type){
+      case 1:
         //along y-axis 
         if(p->x < x + 7 + xs * delta_time && x < p->x + 8 + xs * delta_time){
           if(abs(int((window_height - p->y) - y)) < dist_y){
@@ -35,12 +36,20 @@ void Player::update(float delta_time){
           }
         }
         //along x-axis 
-        if(window_height - p->y < y + ys * delta_time + 5 && y + ys * delta_time + 1< window_height - p->y && p->x < window_width + x){
+        if(window_height - p->y < y + ys * delta_time + 6 && y + ys * delta_time < window_height - p->y && p->x < window_width + x){
           if(abs(int(p->x - x)) < dist_x){
             dist_x = abs(int(p->x - x));
             near_block_x = p;
           }
         }
+      break;
+      case 2:
+        //money
+        if((p->y - y) * (p->y - y) + (p->x - x) * (p->x - x) < 50){
+          p->ys-=20;
+          money_collected++;
+        }
+      break;
       }
     }
     //will player collide?
@@ -61,6 +70,8 @@ void Player::update(float delta_time){
       else if(near_block_x->x < x + 7 + xs * delta_time && x < near_block_x->x + 9 + xs * delta_time){
         xs = 0;
       }
+
+    
 
     //change in position
     y += ys * delta_time;
@@ -126,6 +137,18 @@ void create_block(uint8_t typ, int x, int y){
   blocks[free]->xs = 0;
   blocks[free]->ys = 0;
 
+}
+
+void Object::update(float delta_time){
+  switch(type){
+    case 2:
+      if(ys < 0){
+        ys += 500 * delta_time;
+        if(ys > -5)type = 0;
+        y += ys * delta_time;
+      }
+    break;
+  }
 }
 
 unsigned short free_blocks(){

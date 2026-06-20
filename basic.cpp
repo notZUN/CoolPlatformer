@@ -16,6 +16,7 @@ unsigned int generation_x = 20;
 uint8_t chance_money = 0;
 float anim_money_y = 0;
 bool anim_money_direction = 0;
+int money_collected = 0;
 Object* blocks[1000];
 
 Object* near_block_x;
@@ -116,6 +117,9 @@ for(int i = 0; i < 1000; i++){
          
 
         player.update(delta);
+        for(int i = 0; i < 1000; i++){
+          blocks[i]->update(delta);
+        }
 
       
         if(player.x - cam_x > 15){
@@ -181,12 +185,12 @@ for(int i = 0; i < 1000; i++){
         }
 
         //paint x&y_near_block
-        /*0for(int i = 0; i < 8; i++){
+        /*for(int i = 0; i < 8; i++){
           for(int j = 0; j < 3; j++){
             if(near_block_x != nullptr)camera[(window_height - int(near_block_x->y - int(cam_y) + j)) * window_width + int(near_block_x->x - cam_x + i)] = 0;
           }
-        }
-        for(int i = 0; i < 8; i++){
+        }*/ 
+        /*for(int i = 0; i < 8; i++){
           for(int j = 0; j < 3; j++){
               if(near_block_y != nullptr)camera[(window_height - int(near_block_y->y - int(cam_y) + j)) * window_width + int(near_block_y->x - cam_x + i)] = 0;
           }

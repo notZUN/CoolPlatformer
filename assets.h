@@ -12,6 +12,7 @@ extern const uint8_t sprite_player[4][36];
 extern const uint8_t sprite_player_info[2][2];
 extern const uint16_t pallete[256];
 extern const uint8_t money[25];
+extern int money_collected;
 
 
 //functions and variables
@@ -21,6 +22,7 @@ public:
     uint8_t type;
 
     Object(uint8_t typ, float start_x, float start_y, float start_xs, float start_ys);
+    void update(float delta_time);
 };
 class Player{
 public:
