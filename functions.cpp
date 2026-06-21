@@ -46,8 +46,9 @@ void Player::update(float delta_time){
       case 2:
         //money
         if((p->y - y) * (p->y - y) + (p->x - x) * (p->x - x) < 50){
-          p->ys-=20;
+          p->ys-=100;
           money_collected++;
+          p->type = 3;
         }
       break;
       }
@@ -141,7 +142,7 @@ void create_block(uint8_t typ, int x, int y){
 
 void Object::update(float delta_time){
   switch(type){
-    case 2:
+    case 3:
       if(ys < 0){
         ys += 500 * delta_time;
         if(ys > -5)type = 0;

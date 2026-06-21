@@ -174,6 +174,7 @@ for(int i = 0; i < 1000; i++){
               break;
             //money 
             case 2:
+            case 3:
               if(blocks[l]->x + 5< window_width + cam_x)
               for(int i = 0; i < 5; i++){
                 for(int j = 0; j < 5; j++){
@@ -182,7 +183,19 @@ for(int i = 0; i < 1000; i++){
               }
               break;
           }
+        } 
+        //amount of money
+        std::string amount_money = std::to_string(money_collected);
+        for(unsigned short l = 0; l < amount_money.size(); l++){
+          for(int i = 0; i < 5; i++){
+            for(int j = 0; j < 3; j++){
+              if(numbers[amount_money[l] - '0'][i*3+j] != 255){
+                camera[window_width * 2 + l * 4 + i * window_width + j + 2] = numbers[amount_money[l] - '0'][i*3+j];
+              }
+            }
+          }
         }
+        std::cout << "money: " << amount_money << '\n';
 
         //paint x&y_near_block
         /*for(int i = 0; i < 8; i++){

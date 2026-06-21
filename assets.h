@@ -7,13 +7,13 @@ extern float cam_x;
 extern const uint8_t window_height, window_width;
 extern const uint8_t fg;
 extern int unsigned generation_x;
+extern int money_collected;
 //sprites
 extern const uint8_t sprite_player[4][36];
 extern const uint8_t sprite_player_info[2][2];
 extern const uint16_t pallete[256];
 extern const uint8_t money[25];
-extern int money_collected;
-
+extern const uint8_t numbers[10][15];
 
 //functions and variables
 class Object{
