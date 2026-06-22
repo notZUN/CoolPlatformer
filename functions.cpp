@@ -67,7 +67,7 @@ void Player::update(float delta_time){
       ys = 0;
       on_floor = true;
     }
-    else if(near_block_old != near_block_y){
+    else if(near_block_old != nullptr) if(near_block_old->y != near_block_y->y){
       on_floor = false;
     }
       //along x-axis 

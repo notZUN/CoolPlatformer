@@ -19,8 +19,8 @@ bool anim_money_direction = 0;
 int money_collected = 0;
 Object* blocks[1000];
 
-Object* near_block_x;
-Object* near_block_y;
+Object* near_block_x = nullptr;
+Object* near_block_y = nullptr;
 
 
 int main(){
@@ -83,9 +83,14 @@ for(int i = 0; i < 1000; i++){
             uint8_t rand_num = (rand() & 7) + 1, rand_y = (abs(rand()) & 7) * 4 + 16;
             for(int i = 0; i < rand_num; i++)create_block(1,generation_x + (i * 8), rand_y);
             //money 
-            if((rand() & 31) + 1 > chance_money){
+            //on blocks 
+            if((rand() & 31) > chance_money){
               create_block(2, generation_x + 1 + (rand() % rand_num) * 8, (window_height - rand_y) - 8);
             }
+            if(((rand() & 31) & 31) > chance_money){
+              create_block(2, generation_x + (rand() & 63), window_height - 12);
+            }
+            //on ground
           generation_x += rand_num * 8 + (abs(rand()) & 31) + 8;
         }
 
