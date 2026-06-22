@@ -14,6 +14,8 @@ uint16_t final_screen[window_width * window_height];
 float cam_x = 0, cam_y = 0;
 unsigned int generation_x = 20;
 uint8_t chance_money = 28;
+float chance_spike = 25;
+int spike_quantity_max = 2;
 float anim_money_y = 0;
 bool anim_money_direction = 0;
 int money_collected = 0;
@@ -78,29 +80,55 @@ for(int i = 0; i < 1000; i++){
         for(auto &p: blocks){
           if(p->x < cam_x)p->type = 0;
         }
+
         //generation
         while(cam_x + 200 > generation_x){
             uint8_t rand_num = (rand() & 7) + 1, rand_y = (abs(rand()) & 7) * 4 + 16;
             for(int i = 0; i < rand_num; i++)create_block(1,generation_x + (i * 8), rand_y);
-            //money 
+            
             //on blocks 
+            //money 
             if((rand() & 31) > chance_money){
               create_block(2, generation_x + 1 + (rand() % rand_num) * 8, (window_height - rand_y) - 8);
             }
-            if(((rand() & 31) & 31) > chance_money){
-              create_block(2, generation_x + (rand() & 63), window_height - 12);
+
+            //spikes 
+            else if((rand() & 31) > chance_spike){
+              int spike_quantity = rand() % spike_quantity_max + 1;
+              int spike_generation = generation_x + (rand() % rand_num) * 8 + 1;
+                while(spike_generation + (spike_quantity - 1) * 5 > generation_x + (rand_num-1) * 8 + 2 && spike_generation > generation_x){
+                  spike_generation -= 4;
+                }
+                while(spike_generation < generation_x){
+                  spike_generation += 4;
+                }
+                while(spike_generation + (spike_quantity - 1) * 5 > generation_x + (rand_num-1) * 8 + 2){
+                  spike_quantity--;
+                }
+
+              for(int i = 0; i < spike_quantity; i++)create_block(4, spike_generation + i * 5, (window_height - rand_y) - 5); 
             }
             //on ground
+            //money 
+            if((rand() & 31) > chance_money){
+              create_block(2, generation_x + (rand() & 63), window_height - 12);
+            }
+            //spikes 
+            if((rand() & 31) > chance_spike){
+              int spike_quantity = rand() % spike_quantity_max + 1;
+              int spike_generation = generation_x + (rand() & 31);
+              for(int i = 0; i < spike_quantity; i++)create_block(4, spike_generation + i * 5, window_height - 9); 
+            }
           generation_x += rand_num * 8 + (abs(rand()) & 31) + 8;
         }
 
         //block count test 
-        int test = 0;
+        /*int test = 0;
         for(int i = 0; i < 1000; i++){
           if(blocks[i] -> type != 0) test++;
         }
         
-        std::cout << test << '\n';
+        std::cout << test << '\n';*/
 
         //input from keyboard
         while(SDL_PollEvent(&event)){
@@ -164,7 +192,7 @@ for(int i = 0; i < 1000; i++){
             anim_money_direction = 1;
           }
           anim_money_y += (int(anim_money_direction) * 2 - 1) * 4 * delta;
-          std::cout << anim_money_y << ' ' << anim_money_direction << '\n';
+          //std::cout << anim_money_y << ' ' << anim_money_direction << '\n';
         //blocks 
         for(int l = 0; l < 1000; l++){
           switch(blocks[l]->type){
@@ -187,6 +215,16 @@ for(int i = 0; i < 1000; i++){
                 }
               }
               break;
+            //spikes 
+            case 4:
+              if(blocks[l]->x + 5 < window_width + cam_x)
+              for(int i = 0; i < 3; i++){
+                for(int j = 0; j < 5; j++){
+                  if(spike[i*5+j] != 255){
+                  camera[(int(blocks[l]->y - int(cam_y) + i)) * window_width + int(blocks[l]->x - cam_x + j)] = spike[i*5+j];
+                  }
+                }
+              }
           }
         } 
         //amount of money
@@ -201,13 +239,13 @@ for(int i = 0; i < 1000; i++){
         for(unsigned short l = 0; l < amount_money.size(); l++){
           for(int i = 0; i < 5; i++){
             for(int j = 0; j < 3; j++){
-              if(numbers[amount_money[l] - '0'][i*3+j] != 255){
-                camera[window_width * 2 + l * 4 + i * window_width + j + 9] = numbers[amount_money[l] - '0'][i*3+j];
+              if(numbers[amount_money[l] - '0'][i*3+j] == true){
+                camera[window_width * 2 + l * 4 + i * window_width + j + 9] = 4;
               }
             }
           }
         }
-        std::cout << "money: " << amount_money << '\n';
+        //std::cout << "money: " << amount_money << '\n';
 
         //paint x&y_near_block
         /*for(int i = 0; i < 8; i++){

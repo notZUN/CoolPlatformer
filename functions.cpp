@@ -82,7 +82,7 @@ void Player::update(float delta_time){
     if((x + xs * delta_time) - cam_x < 5){
       xs *= -1.2;
     }
-    std::cout << x << '\n';
+    
     if(y >= window_height - 12){
         y = window_height - 12;
         ys = 0;
