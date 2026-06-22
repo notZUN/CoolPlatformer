@@ -21,6 +21,7 @@ Object::Object(uint8_t typ, float start_x, float start_y, float start_xs, float 
 void Player::update(float delta_time){
       //physic
     //collisions
+    Object* near_block_old = near_block_y;
       //search nearest block
     float dist_x = 99999999.0f;
     float dist_y = 99999999.0f;
@@ -66,13 +67,14 @@ void Player::update(float delta_time){
       ys = 0;
       on_floor = true;
     }
+    else if(near_block_old != near_block_y){
+      on_floor = false;
+    }
       //along x-axis 
       if(dist_x > 1024) near_block_x = nullptr;
       else if(near_block_x->x < x + 7 + xs * delta_time && x < near_block_x->x + 9 + xs * delta_time){
         xs = 0;
       }
-
-    
 
     //change in position
     y += ys * delta_time;

@@ -13,7 +13,7 @@ uint8_t camera[window_width * window_height];
 uint16_t final_screen[window_width * window_height];
 float cam_x = 0, cam_y = 0;
 unsigned int generation_x = 20;
-uint8_t chance_money = 0;
+uint8_t chance_money = 28;
 float anim_money_y = 0;
 bool anim_money_direction = 0;
 int money_collected = 0;
@@ -185,12 +185,19 @@ for(int i = 0; i < 1000; i++){
           }
         } 
         //amount of money
+            for(int i = 0; i < 5; i++){
+              for(int j = 0; j < 5; j++){
+                if(money[i*5+j] != 255)camera[(i + 2) * window_width + j + 2] = money[i*5+j];
+              }
+            }
+        
+
         std::string amount_money = std::to_string(money_collected);
         for(unsigned short l = 0; l < amount_money.size(); l++){
           for(int i = 0; i < 5; i++){
             for(int j = 0; j < 3; j++){
               if(numbers[amount_money[l] - '0'][i*3+j] != 255){
-                camera[window_width * 2 + l * 4 + i * window_width + j + 2] = numbers[amount_money[l] - '0'][i*3+j];
+                camera[window_width * 2 + l * 4 + i * window_width + j + 9] = numbers[amount_money[l] - '0'][i*3+j];
               }
             }
           }
