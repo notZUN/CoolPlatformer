@@ -6,6 +6,7 @@
 #include <iostream>
 
 //create base variables for window width and hight, arrays for my "painting"(I don't know how call it), etc.
+bool running = 1;
 float delta = 0.016f;
 const uint8_t fg = 100; //gravity
 const uint8_t window_width = 170, window_height = 96;
@@ -55,7 +56,6 @@ int main(){
 
     SDL_Event event;
     
-    bool running = 1;
     uint32_t tick_start;
 
     //cleaning array of camera

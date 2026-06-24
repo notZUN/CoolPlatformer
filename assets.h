@@ -15,6 +15,7 @@ extern const uint16_t pallete[256];
 extern const uint8_t money[25];
 extern const bool numbers[10][15];
 extern const uint8_t spike[15];
+extern bool running;
 
 //functions and variables
 class Object{

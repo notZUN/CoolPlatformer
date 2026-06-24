@@ -52,6 +52,11 @@ void Player::update(float delta_time){
           p->type = 3;
         }
       break;
+      case 4:
+        if(p->x < x + 6 && p->x + 5 > x && p->y + 3 > y && p->y < y + 6){
+          running = 0;
+        }
+      break;
       }
     }
     //will player collide?
