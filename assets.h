@@ -3,6 +3,8 @@
 #include <cstdint>
 #include <utility>
 
+#include <SDL2/SDL_mixer.h>
+
 extern float cam_x;
 extern const uint8_t window_height, window_width;
 extern const uint8_t fg;
@@ -16,6 +18,9 @@ extern const uint8_t money[25];
 extern const bool numbers[10][15];
 extern const uint8_t spike[15];
 extern bool running;
+
+extern Mix_Chunk* sound_jump;
+extern Mix_Chunk* sound_money;
 
 //functions and variables
 class Object{

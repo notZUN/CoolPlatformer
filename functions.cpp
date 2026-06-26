@@ -1,4 +1,5 @@
 #include "assets.h"
+#include <SDL2/SDL_timer.h>
 #include<iostream>
 Player::Player(int16_t start_x, int16_t start_y){
     x = start_x;
@@ -50,6 +51,7 @@ void Player::update(float delta_time){
           p->ys-=100;
           money_collected++;
           p->type = 3;
+          Mix_PlayChannel(-1, sound_money, 0);
         }
       break;
       case 4:
@@ -128,6 +130,7 @@ void Player::jump(){
     if(on_floor){
         ys = -80;
         on_floor = 0;
+        Mix_PlayChannel(-1, sound_jump, 0);
     }
 }
 

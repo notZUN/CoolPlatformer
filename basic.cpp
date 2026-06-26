@@ -1,4 +1,5 @@
 #include <SDL2/SDL_timer.h>
+#include <SDL2/SDL_mixer.h>
 #include <cstdint>
 #include <SDL2/SDL.h>
 #include <ctime>
@@ -24,6 +25,11 @@ Object* blocks[1000];
 
 Object* near_block_x = nullptr;
 Object* near_block_y = nullptr;
+    
+Mix_Music* music = nullptr;
+Mix_Chunk* death = nullptr;
+Mix_Chunk* sound_jump = nullptr;
+Mix_Chunk* sound_money = nullptr;
 
 
 int main(){
@@ -53,6 +59,20 @@ int main(){
     SDL_TEXTUREACCESS_STREAMING,
     window_width, window_height
 );
+    //audio 
+    Mix_OpenAudio(24000, MIX_DEFAULT_FORMAT, 1, 2048);
+
+    music = Mix_LoadMUS("sounds/music/final_b.opus");
+    Mix_VolumeMusic(32);
+
+    death = Mix_LoadWAV("sounds/sounds/death.opus");
+    Mix_VolumeChunk(death, 128);
+
+    sound_jump = Mix_LoadWAV("sounds/sounds/sound_jump.opus");
+    Mix_VolumeChunk(sound_jump, 128);
+    
+    sound_money = Mix_LoadWAV("sounds/sounds/sound_money.opus");
+    Mix_VolumeChunk(sound_money, 128);
 
     SDL_Event event;
     
@@ -70,6 +90,8 @@ int main(){
 for(int i = 0; i < 1000; i++){
   blocks[i] = new Object(0, 0, 0, 0, 0);
 }
+
+Mix_PlayMusic(music, -1);
     
 //game
     while(running){
@@ -277,13 +299,25 @@ for(int i = 0; i < 1000; i++){
         //fps test
         //std::cout << 1 / delta << "fps \n";
     }
-
-
-
-    //end
-    SDL_DestroyRenderer(render);
+    
+    //end 
 
     SDL_DestroyWindow(window);
+    
+    Mix_PauseMusic();
+    
+    Mix_PlayChannel(-1, death, 0);
+    
+    SDL_Delay(2000);
+
+    Mix_FreeMusic(music);
+    Mix_FreeChunk(death);
+    Mix_FreeChunk(sound_jump);
+    Mix_FreeChunk(sound_money);
+    Mix_CloseAudio();
+    Mix_Quit();
+
+    SDL_DestroyRenderer(render);
 
     SDL_Quit();
 
